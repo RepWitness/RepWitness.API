@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace RepWitness.Infrastructure;
 
-namespace RepWitness.Infrastructure
+internal class DependencyInjection
 {
-    internal class DependencyInjection
-    {
-    }
 }
