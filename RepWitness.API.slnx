@@ -1,3 +1,7 @@
 <Solution>
   <Project Path="RepWitness.API/RepWitness.API.csproj" />
+  <Project Path="RepWitness.Application/RepWitness.Application.csproj" Id="d4fcf6ef-0803-4d7e-a65a-96248fe41f52" />
+  <Project Path="RepWitness.Domain/RepWitness.Domain.csproj" Id="b6d045cb-7c3f-42cf-94e4-ee812f6d2738" />
+  <Project Path="RepWitness.Infrastructure/RepWitness.Infrastructure.csproj" Id="ffc1f374-1eed-47d4-94ee-07ec309f5c1b" />
+  <Project Path="RepWitness.Persistence/RepWitness.Persistence.csproj" Id="de0701cc-e48c-4269-be6a-a1e897b49b6d" />
 </Solution>
