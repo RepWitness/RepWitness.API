@@ -10,7 +10,7 @@ public partial class Program
         builder.Services.AddControllers();
         builder.Services.AddOpenApi();
         builder.Services.AddDbContext<RepWitnessContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("GymBro")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("RepWitness")));
 
         var app = builder.Build();
 

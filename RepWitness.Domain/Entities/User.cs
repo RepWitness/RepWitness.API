@@ -15,7 +15,7 @@ public class User
     public DateOnly DateOfBirth { get; set; }
     public int Height { get; set; }
     public float Weight { get; set; }
-    public int RoleId { get; set; }
+    public Guid RoleId { get; set; }
     public Role Role { get; set; } = null!;
     public bool IsDeleted { get; set; }
 }
