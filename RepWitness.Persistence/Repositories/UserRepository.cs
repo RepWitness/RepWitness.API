@@ -1,19 +1,19 @@
-﻿using RepWitness.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using RepWitness.Domain.Entities;
 using RepWitness.Domain.Generic;
 using RepWitness.Domain.Interfaces;
 using RepWitness.Persistence.Context;
-using System.Data.Entity;
 
 namespace RepWitness.Persistence.Repositories;
 
-public class UserRepositor(RepWitnessContext context) : IUserRepository
+public class UserRepository(RepWitnessContext _context) : IUserRepository
 {
     public ResponseType<User> Add(User entity)
     {
         try
         {
-            context.Users.Add(entity);
-            context.SaveChanges();
+            _context.Users.Add(entity);
+            _context.SaveChanges();
 
             return new ResponseType<User>
             {
@@ -42,7 +42,7 @@ public class UserRepositor(RepWitnessContext context) : IUserRepository
 
             if (user is not { IsSuccess: true, Object: not null })
             {
-                return new ResponseType<User>()
+                return new ResponseType<User>
                 {
                     Message = user.Message,
                     IsSuccess = false
@@ -51,8 +51,8 @@ public class UserRepositor(RepWitnessContext context) : IUserRepository
 
             user.Object.IsDeleted = true;
 
-            context.Users.Update(user.Object);
-            context.SaveChanges();
+            _context.Users.Update(user.Object);
+            _context.SaveChanges();
 
             return new ResponseType<User>
             {
@@ -77,13 +77,14 @@ public class UserRepositor(RepWitnessContext context) : IUserRepository
     {
         try
         {
-            var users = context.Users.Include(u=>u.Role);
+            // Use EF Core Include (Microsoft.EntityFrameworkCore) so Role is eagerly loaded.
+            var users = _context.Users.Include(u => u.Role).ToList();
 
             return new ResponseType<User>
             {
                 Object = null,
-                Collection = [.. users],
-                Message = "Users was sent successfully",
+                Collection = users,
+                Message = "Users were returned successfully",
                 IsSuccess = true
             };
         }
@@ -106,7 +107,7 @@ public class UserRepositor(RepWitnessContext context) : IUserRepository
             var getAllUsers = GetAll();
             if (getAllUsers is not { IsSuccess: true, Collection: not null })
             {
-                return new ResponseType<User>()
+                return new ResponseType<User>
                 {
                     Message = getAllUsers.Message,
                     IsSuccess = false
@@ -116,17 +117,17 @@ public class UserRepositor(RepWitnessContext context) : IUserRepository
             var user = getAllUsers.Collection.FirstOrDefault(u => u.Id == id);
             if (user == null)
             {
-                return new ResponseType<User>()
+                return new ResponseType<User>
                 {
-                    Message = "User could not be find!",
+                    Message = "User could not be found!",
                     IsSuccess = false
                 };
             }
 
-            return new ResponseType<User>()
+            return new ResponseType<User>
             {
                 Object = user,
-                Message = "User find successfully!",
+                Message = "User found successfully!",
                 IsSuccess = true
             };
         }
@@ -142,12 +143,67 @@ public class UserRepositor(RepWitnessContext context) : IUserRepository
         }
     }
 
+    public ResponseType<bool> AreEmailAndUsernameUnique(string email, string username, Guid? userId = null)
+    {
+        try
+        {
+            var getAllUsers = GetAll();
+            if (getAllUsers is not { IsSuccess: true, Collection: not null })
+            {
+                return new ResponseType<bool>
+                {
+                    Message = getAllUsers.Message,
+                    IsSuccess = false
+                };
+            }
+
+            var emails = getAllUsers.Collection.Count(u => u.Email == email && u.Id != userId);
+            if (emails > 0)
+            {
+                return new ResponseType<bool>
+                {
+                    Object = false,
+                    Message = "Email already taken, try other option!",
+                    IsSuccess = false
+                };
+            }
+
+            var usernames = getAllUsers.Collection.Count(u => u.Username == username && u.Id != userId);
+            if (usernames > 0)
+            {
+                return new ResponseType<bool>
+                {
+                    Object = false,
+                    Message = "Username already taken, try other option!",
+                    IsSuccess = false
+                };
+            }
+
+            return new ResponseType<bool>
+            {
+                Object = true,
+                Message = "Email and username are available!",
+                IsSuccess = true
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ResponseType<bool>
+            {
+                Object = false,
+                Collection = null,
+                Message = ex.Message,
+                IsSuccess = false
+            };
+        }
+    }
+
     public ResponseType<User> Update(User entity)
     {
         try
         {
-            context.Users.Update(entity);
-            context.SaveChanges();
+            _context.Users.Update(entity);
+            _context.SaveChanges();
 
             return new ResponseType<User>
             {
@@ -166,6 +222,5 @@ public class UserRepositor(RepWitnessContext context) : IUserRepository
                 IsSuccess = false
             };
         }
-        ;
     }
 }

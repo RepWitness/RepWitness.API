@@ -1,5 +1,14 @@
-﻿namespace RepWitness.Application;
+﻿using Microsoft.Extensions.DependencyInjection;
+using RepWitness.Application.Common.Mappings;
 
-internal class DependencyInjection
+namespace RepWitness.Application;
+
+public static class DependencyInjection
 {
+    public static IServiceCollection AddApplicationConfiguration(this IServiceCollection services)
+    {
+        services.AddAutoMapper(cfg => { }, typeof(UserProfile).Assembly);
+
+        return services;
+    }
 }

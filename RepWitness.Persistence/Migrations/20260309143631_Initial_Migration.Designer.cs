@@ -12,7 +12,7 @@ using RepWitness.Persistence.Context;
 namespace RepWitness.Persistence.Migrations
 {
     [DbContext(typeof(RepWitnessContext))]
-    [Migration("20260306114716_Initial_Migration")]
+    [Migration("20260309143631_Initial_Migration")]
     partial class Initial_Migration
     {
         /// <inheritdoc />

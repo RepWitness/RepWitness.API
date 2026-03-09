@@ -5,9 +5,9 @@ namespace RepWitness.Persistence.Context;
 
 public class RepWitnessContext(DbContextOptions<RepWitnessContext> options) : DbContext(options)
 {
+    public DbSet<Role> Roles { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Category> Categories { get; set; }
-    public DbSet<Role> Roles { get; set; }
     public DbSet<Exercises> Exercises { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
