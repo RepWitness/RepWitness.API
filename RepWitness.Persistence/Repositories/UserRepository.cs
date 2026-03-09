@@ -223,4 +223,47 @@ public class UserRepository(RepWitnessContext _context) : IUserRepository
             };
         }
     }
+
+    public ResponseType<User> GetUserByEmail(string email)
+    {
+        try
+        {
+            var getAllUsers = GetAll();
+            if (getAllUsers is not { IsSuccess: true, Collection: not null })
+            {
+                return new ResponseType<User>()
+                {
+                    Message = getAllUsers.Message,
+                    IsSuccess = false
+                };
+            }
+
+            var user = getAllUsers.Collection.FirstOrDefault(u => u.Email == email);
+            if (user == null)
+            {
+                return new ResponseType<User>()
+                {
+                    Message = "Email is wrong!",
+                    IsSuccess = false
+                };
+            }
+
+            return new ResponseType<User>()
+            {
+                Object = user,
+                Message = "User find successfully!",
+                IsSuccess = true
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ResponseType<User>
+            {
+                Object = null,
+                Collection = null,
+                Message = ex.Message,
+                IsSuccess = false
+            };
+        }
+    }
 }

@@ -1,4 +1,4 @@
-﻿namespace RepWitness.Application.Features.User.Dtos;
+﻿namespace RepWitness.Application.Features.Auth.Dtos;
 
 public class UserLogInResponseDto
 {

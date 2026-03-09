@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RepWitness.Application;
+using RepWitness.Infrastructure;
 using RepWitness.Persistence;
 using RepWitness.Persistence.Context;
 using System.Reflection;
@@ -16,10 +17,11 @@ public partial class Program
        ];
 
         builder.Services.AddControllers();
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(allCoreProjectsAssembly));
+        builder.Services.AddInfrastructureServices();
         builder.Services.AddOpenApi();
         builder.Services.AddApplicationConfiguration();
         builder.Services.AddPersistenceServices();
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(allCoreProjectsAssembly));
         builder.Services.AddDbContext<RepWitnessContext>(options => {
             options.UseSqlServer(builder.Configuration.GetConnectionString("RepWitness"));
             options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);

@@ -1,5 +1,8 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RepWitness.Application.Features.Auth.Dtos;
+using RepWitness.Application.Features.Auth.Query;
 using RepWitness.Application.Features.User.Commands;
 using RepWitness.Application.Features.User.Dtos;
 using RepWitness.Domain.Generic;
@@ -15,4 +18,13 @@ public class AuthController(ISender sender) : BaseAPIController
     {
         return await sender.Send(new CreateUserCommand { User = user });
     }
+
+    [HttpPost("login")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    public async Task<ResponseType<UserLogInResponseDto>> LogIn(UserLogInRequestDto user)
+    {
+        return await sender.Send(new LogInQuery { User = user });
+    }
+
 }
