@@ -2,6 +2,7 @@
 using RepWitness.Domain.Entities;
 using RepWitness.Domain.Generic;
 using RepWitness.Domain.Interfaces;
+using RepWitness.Infrastructure.Security;
 using RepWitness.Persistence.Context;
 
 namespace RepWitness.Persistence.Repositories;
@@ -77,7 +78,6 @@ public class UserRepository(RepWitnessContext _context) : IUserRepository
     {
         try
         {
-            // Use EF Core Include (Microsoft.EntityFrameworkCore) so Role is eagerly loaded.
             var users = _context.Users.Include(u => u.Role).ToList();
 
             return new ResponseType<User>
@@ -260,6 +260,48 @@ public class UserRepository(RepWitnessContext _context) : IUserRepository
             return new ResponseType<User>
             {
                 Object = null,
+                Collection = null,
+                Message = ex.Message,
+                IsSuccess = false
+            };
+        }
+    }
+
+    public ResponseType<bool> ResetPassword(Guid id, string password)
+    {
+        try
+        {
+            var user = GetOne(id);
+
+            if (user is not { IsSuccess: true, Object: not null })
+            {
+                return new ResponseType<bool>
+                {
+                    Message = user.Message,
+                    IsSuccess = false
+                };
+            }
+
+            var passwordHash = PasswordHasher.CreatePasswordHash(password);
+
+            user.Object.PasswordHash = passwordHash.Item1;
+            user.Object.PasswordSalt = passwordHash.Item2;
+
+            _context.Users.Update(user.Object);
+            _context.SaveChanges();
+
+            return new ResponseType<bool>
+            {
+                Object = true,
+                Message = "User updated successfully!",
+                IsSuccess = true
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ResponseType<bool>
+            {
+                Object = false,
                 Collection = null,
                 Message = ex.Message,
                 IsSuccess = false

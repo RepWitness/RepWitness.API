@@ -3,12 +3,10 @@ using AutoMapper;
 using MediatR;
 using RepWitness.Application.Common.Behaviors;
 using RepWitness.Application.Features.User.Dtos;
-using RepWitness.Domain.Entities;
 using RepWitness.Domain.Generic;
 using RepWitness.Domain.Interfaces;
 using RepWitness.Infrastructure.Interfaces;
 using RepWitness.Infrastructure.Models;
-using RepWitness.Infrastructure.Services;
 
 namespace RepWitness.Application.Features.User.Commands;
 

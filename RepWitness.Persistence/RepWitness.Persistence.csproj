@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RepWitness.Domain\RepWitness.Domain.csproj" />
+    <ProjectReference Include="..\RepWitness.Infrastructure\RepWitness.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
