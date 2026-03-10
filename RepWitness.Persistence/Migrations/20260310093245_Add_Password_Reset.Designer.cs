@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RepWitness.Persistence.Context;
 
@@ -11,9 +12,11 @@ using RepWitness.Persistence.Context;
 namespace RepWitness.Persistence.Migrations
 {
     [DbContext(typeof(RepWitnessContext))]
-    partial class RepWitnessContextModelSnapshot : ModelSnapshot
+    [Migration("20260310093245_Add_Password_Reset")]
+    partial class Add_Password_Reset
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

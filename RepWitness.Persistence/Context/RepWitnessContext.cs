@@ -9,6 +9,7 @@ public class RepWitnessContext(DbContextOptions<RepWitnessContext> options) : Db
     public DbSet<User> Users { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Exercises> Exercises { get; set; }
+    public DbSet<PasswordReset> PasswordResets { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -29,6 +30,11 @@ public class RepWitnessContext(DbContextOptions<RepWitnessContext> options) : Db
             .HasForeignKey(e => e.CategoryId);
 
         modelBuilder.Entity<Exercises>()
+            .HasOne(e => e.User)
+            .WithMany()
+            .HasForeignKey(e => e.UserId);
+
+        modelBuilder.Entity<PasswordReset>()
             .HasOne(e => e.User)
             .WithMany()
             .HasForeignKey(e => e.UserId);
