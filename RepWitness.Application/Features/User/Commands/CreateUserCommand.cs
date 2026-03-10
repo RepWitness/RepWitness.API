@@ -3,8 +3,12 @@ using AutoMapper;
 using MediatR;
 using RepWitness.Application.Common.Behaviors;
 using RepWitness.Application.Features.User.Dtos;
+using RepWitness.Domain.Entities;
 using RepWitness.Domain.Generic;
 using RepWitness.Domain.Interfaces;
+using RepWitness.Infrastructure.Interfaces;
+using RepWitness.Infrastructure.Models;
+using RepWitness.Infrastructure.Services;
 
 namespace RepWitness.Application.Features.User.Commands;
 
@@ -13,7 +17,7 @@ public class CreateUserCommand : IRequest<Result<ResponseType<bool>>>
     public required CreateUserRequestDto User { get; set; }
 }
 
-public sealed class CreateUserCommandHandler(IUserRepository userRepository, IMapper mapper)
+public sealed class CreateUserCommandHandler(IUserRepository userRepository, IMapper mapper, IEmailService emailService)
     : IRequestHandler<CreateUserCommand, Result<ResponseType<bool>>>
 {
     public async Task<Result<ResponseType<bool>>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
@@ -63,6 +67,14 @@ public sealed class CreateUserCommandHandler(IUserRepository userRepository, IMa
                 Object = false
             });
         }
+
+        await emailService.SendEmailAsync(new EmailDto
+        {
+            To = registerResponse.Object!.Email,
+            Subject = "Account made successfully!",
+            Body = $"You have successfully created an account in at {DateTime.UtcNow}."
+        });
+
 
         return Result<ResponseType<bool>>.Success(new ResponseType<bool>
         {

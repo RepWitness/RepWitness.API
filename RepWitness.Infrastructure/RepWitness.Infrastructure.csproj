@@ -10,7 +10,6 @@
     <Folder Include="Authentication\" />
     <Folder Include="Logging\" />
     <Folder Include="Configuration\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>
