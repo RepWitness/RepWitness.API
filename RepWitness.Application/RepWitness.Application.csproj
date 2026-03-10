@@ -7,11 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Common\Interfaces\" />
-    <Folder Include="Common\Behaviors\" />
-    <Folder Include="Common\Mappings\" />
-    <Folder Include="Common\Models\" />
-    <Folder Include="Features\" />
+    <PackageReference Include="Ardalis.Result" Version="10.1.0" />
+    <PackageReference Include="AutoMapper" Version="16.1.0" />
+    <PackageReference Include="MediatR" Version="14.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RepWitness.Domain\RepWitness.Domain.csproj" />
+    <ProjectReference Include="..\RepWitness.Infrastructure\RepWitness.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

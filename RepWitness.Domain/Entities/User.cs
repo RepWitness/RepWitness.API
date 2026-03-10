@@ -4,7 +4,7 @@ namespace RepWitness.Domain.Entities;
 
 public class User
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string FirstName { get; set; } = null!;
     public string LastName { get; set; } = null!;
     public string Email { get; set; } = null!;
@@ -15,7 +15,7 @@ public class User
     public DateOnly DateOfBirth { get; set; }
     public int Height { get; set; }
     public float Weight { get; set; }
-    public int RoleId { get; set; }
+    public Guid RoleId { get; set; }
     public Role Role { get; set; } = null!;
     public bool IsDeleted { get; set; }
 }
