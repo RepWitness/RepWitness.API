@@ -40,6 +40,25 @@ public sealed class CreateUserCommandHandler(IUserRepository userRepository, IMa
             });
         }
 
+        if (request.User.Password != request.User.ConfirmPassword)
+        {
+            return Result<ResponseType<bool>>.Success(new ResponseType<bool>
+            {
+                IsSuccess = false,
+                Message = "Password and confirm password must be the same"
+            });
+        }
+
+        var passwordValidation = AuthenticationValidationHelper.PasswordValidation(request.User.Password);
+        if (!passwordValidation.Key)
+        {
+            return Result<ResponseType<bool>>.Success(new ResponseType<bool>
+            {
+                IsSuccess = false,
+                Message = passwordValidation.Value
+            });
+        }
+
         var areEmailAndUsernameAvailable = userRepository.AreEmailAndUsernameUnique(request.User.Email!, request.User.Username!);
 
         if (areEmailAndUsernameAvailable is { Object: false, IsSuccess: false })

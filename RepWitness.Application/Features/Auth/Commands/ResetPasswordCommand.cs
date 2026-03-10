@@ -1,6 +1,7 @@
 ﻿using Ardalis.Result;
 using MediatR;
 using RepWitness.Application.Common.Behaviors;
+using RepWitness.Application.Features.Auth.Dtos;
 using RepWitness.Domain.Generic;
 using RepWitness.Domain.Interfaces;
 using RepWitness.Infrastructure.Interfaces;
@@ -11,7 +12,7 @@ namespace RepWitness.Application.Features.Auth.Commands;
 public class ResetPasswordCommand : IRequest<Result<ResponseType<bool>>>
 {
     public required Guid LinkId { get; set; }
-    public required string Password { get; set; }
+    public required PasswordResetDto Password { get; set; }
 }
 
 public sealed class ResetPasswordCommandHandler(IUserRepository userRepository,IPasswordResetRepository passwordResetRepository, IEmailService emailService)
@@ -19,7 +20,16 @@ public sealed class ResetPasswordCommandHandler(IUserRepository userRepository,I
 {
     public async Task<Result<ResponseType<bool>>> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
     {
-        var passwordValidation = AuthenticationValidationHelper.PasswordValidation(request.Password);
+        if(request.Password.Password != request.Password.ConfirmPassword)
+        {
+            return Result<ResponseType<bool>>.Success(new ResponseType<bool>
+            {
+                IsSuccess = false,
+                Message = "Password and confirm password must be the same"
+            });
+        }
+
+        var passwordValidation = AuthenticationValidationHelper.PasswordValidation(request.Password.Password);
         if (!passwordValidation.Key)
         {
             return Result<ResponseType<bool>>.Success(new ResponseType<bool>
@@ -42,7 +52,7 @@ public sealed class ResetPasswordCommandHandler(IUserRepository userRepository,I
             });
         }
 
-        var registerResponse = userRepository.ResetPassword(passwordReset.Object!.Value, request.Password);
+        var registerResponse = userRepository.ResetPassword(passwordReset.Object!.Value, request.Password.Password);
 
         if (registerResponse is { IsSuccess: false, Object: false })
         {

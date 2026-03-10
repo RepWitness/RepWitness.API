@@ -32,7 +32,7 @@ public class AuthController(ISender sender) : BaseAPIController
     [ProducesResponseType(404)]
     public async Task<ResponseType<bool>> ResetPassword(Guid linkId, PasswordResetDto password)
     {
-        return await sender.Send(new ResetPasswordCommand { LinkId = linkId, Password = password.Password });
+        return await sender.Send(new ResetPasswordCommand { LinkId = linkId, Password = password });
     }
 
     [HttpPost("password-reset-link/{email}")]
