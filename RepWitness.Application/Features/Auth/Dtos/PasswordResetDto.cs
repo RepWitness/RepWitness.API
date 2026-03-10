@@ -1,6 +1,6 @@
 ﻿namespace RepWitness.Application.Features.Auth.Dtos;
 
-public class PasswordReset
+public class PasswordResetDto
 {
     public string Password { get; set; } = string.Empty;
 }

@@ -10,11 +10,11 @@ namespace RepWitness.Application.Features.Auth.Commands;
 
 public class ResetPasswordCommand : IRequest<Result<ResponseType<bool>>>
 {
-    public required Guid Id { get; set; }
+    public required Guid LinkId { get; set; }
     public required string Password { get; set; }
 }
 
-public sealed class ResetPasswordCommandHandler(IUserRepository userRepository, IEmailService emailService)
+public sealed class ResetPasswordCommandHandler(IUserRepository userRepository,IPasswordResetRepository passwordResetRepository, IEmailService emailService)
     : IRequestHandler<ResetPasswordCommand, Result<ResponseType<bool>>>
 {
     public async Task<Result<ResponseType<bool>>> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
@@ -29,8 +29,20 @@ public sealed class ResetPasswordCommandHandler(IUserRepository userRepository, 
             });
         }
 
-        var registerResponse = userRepository.ResetPassword(request.Id, request.Password);
+        var passwordReset = passwordResetRepository.IsLinkValid(request.LinkId);
 
+        if (passwordReset is { IsSuccess: false, Object: null })
+        {
+            return Result<ResponseType<bool>>.Success(new ResponseType<bool>
+            {
+                IsSuccess = false,
+                Message = passwordReset.Message,
+                Collection = null,
+                Object = false
+            });
+        }
+
+        var registerResponse = userRepository.ResetPassword(passwordReset.Object!.Value, request.Password);
 
         if (registerResponse is { IsSuccess: false, Object: false })
         {
@@ -43,7 +55,20 @@ public sealed class ResetPasswordCommandHandler(IUserRepository userRepository, 
             });
         }
 
-        var user = userRepository.GetOne(request.Id);
+        var userLink = passwordResetRepository.UseLink(request.LinkId);
+
+        if(userLink is { IsSuccess: false, Object: false })
+        {
+            return Result<ResponseType<bool>>.Success(new ResponseType<bool>
+            {
+                IsSuccess = false,
+                Message = userLink.Message,
+                Collection = null,
+                Object = false
+            });
+        }
+
+        var user = userRepository.GetOne(passwordReset.Object!.Value);
 
         if (user is { IsSuccess: false, Object: null })
         {
@@ -58,7 +83,7 @@ public sealed class ResetPasswordCommandHandler(IUserRepository userRepository, 
         {
             To = user.Object!.Email,
             Subject = "Password reset successfully!",
-            Body = $"Password reset successfully in at {DateTime.UtcNow}."
+            Body = $"Password reset successfully in at {DateTime.UtcNow}.Link: Localhost..."
         });
 
 

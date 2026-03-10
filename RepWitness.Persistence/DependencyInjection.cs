@@ -9,6 +9,7 @@ public static class DependencyInjection
     public static IServiceCollection AddPersistenceServices(this IServiceCollection services)
     {
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();
         return services;
     }
 }

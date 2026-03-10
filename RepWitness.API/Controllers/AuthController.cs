@@ -27,12 +27,20 @@ public class AuthController(ISender sender) : BaseAPIController
         return await sender.Send(new LogInQuery { User = user });
     }
 
-    [HttpPut("password-reset/{userId:guid}")]
+    [HttpPut("password-reset/{linkId:guid}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
-    public async Task<ResponseType<bool>> ResetPassword(Guid userId, PasswordReset password)
+    public async Task<ResponseType<bool>> ResetPassword(Guid linkId, PasswordResetDto password)
     {
-        return await sender.Send(new ResetPasswordCommand { Id = userId, Password = password.Password });
+        return await sender.Send(new ResetPasswordCommand { LinkId = linkId, Password = password.Password });
+    }
+
+    [HttpPost("password-reset-link/{email}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    public async Task<ResponseType<bool>> ResetPasswordLink(string email)
+    {
+        return await sender.Send(new ResetPassworkLinkCommand { Email = email });
     }
 
 }
