@@ -4,6 +4,7 @@ using RepWitness.Infrastructure;
 using RepWitness.Infrastructure.Models;
 using RepWitness.Persistence;
 using RepWitness.Persistence.Context;
+using Scalar.AspNetCore;
 using System.Reflection;
 
 public partial class Program
@@ -35,7 +36,19 @@ public partial class Program
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
+
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/openapi/v1.json", "RepWitness API V1");
+            });
         }
+
+        app.MapScalarApiReference(options =>
+        {
+            options.Title = "My API Docs";
+            options.Theme = ScalarTheme.Purple;
+            options.DefaultHttpClient = new(ScalarTarget.CSharp, ScalarClient.HttpClient);
+        });
 
         app.UseHttpsRedirection();
 
