@@ -13,7 +13,7 @@ public class UpdateUserCommand : IRequest<Result<ResponseType<UserResponseDto>>>
     public required UpdateUserRequestDto User { get; set; }
 }
 
-public sealed class UpdateUserCommandHandler(IUserRepository userRepository, IMapper mapper) : IRequestHandler<UpdateUserCommand, Result<ResponseType<UserResponseDto>>>
+public sealed class UpdateUserCommandHandler(IUserRepository userRepository, IRoleRepository roleRepository, IMapper mapper) : IRequestHandler<UpdateUserCommand, Result<ResponseType<UserResponseDto>>>
 {
     public async Task<Result<ResponseType<UserResponseDto>>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
@@ -47,6 +47,19 @@ public sealed class UpdateUserCommandHandler(IUserRepository userRepository, IMa
             });
         }
 
+        if (request.User.RoleId != null)
+        {
+            var role = roleRepository.GetOne(request.User.RoleId.Value);
+
+            if (role is { Object: null, IsSuccess: false })
+            {
+                return Result<ResponseType<UserResponseDto>>.Success(new ResponseType<UserResponseDto>
+                {
+                    IsSuccess = false,
+                    Message = role.Message
+                });
+            }
+        }
 
         var editedUser = mapper.Map<Domain.Entities.User>(request.User);
 

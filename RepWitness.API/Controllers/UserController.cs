@@ -36,7 +36,7 @@ public class UserController(ISender sender) : BaseAPIController
     [HttpDelete("{userId:guid}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
-    public async Task<ResponseType<bool>> DeletePost(Guid userId)
+    public async Task<ResponseType<bool>> DeleteUser(Guid userId)
     {
         return await sender.Send(new DeleteUserCommand { UserId = userId });
     }
