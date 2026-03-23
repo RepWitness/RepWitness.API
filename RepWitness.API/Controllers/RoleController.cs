@@ -15,4 +15,12 @@ public class RoleController(ISender sender) : BaseAPIController
     {
         return await sender.Send(new GetAllRolesQuery());
     }
+
+    [HttpGet("{roleId:guid}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    public async Task<ResponseType<RoleResponseDto>> GetOneRole(Guid roleId)
+    {
+        return await sender.Send(new GetRoleByIdQuery { RoleId = roleId });
+    }
 }

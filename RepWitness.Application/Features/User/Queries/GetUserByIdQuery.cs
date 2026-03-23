@@ -7,14 +7,14 @@ using RepWitness.Domain.Interfaces;
 
 namespace RepWitness.Application.Features.User.Queries;
 
-public class GetUserById : IRequest<Result<ResponseType<UserResponseDto>>>
+public class GetUserByIdQuery : IRequest<Result<ResponseType<UserResponseDto>>>
 {
     public Guid UserId { get; set; }
 }
 
-public sealed class GetOnePostQueryHandler(IUserRepository userRepository, IMapper mapper) : IRequestHandler<GetUserById, Result<ResponseType<UserResponseDto>>>
+public sealed class GetUserByIdQueryHandler(IUserRepository userRepository, IMapper mapper) : IRequestHandler<GetUserByIdQuery, Result<ResponseType<UserResponseDto>>>
 {
-    public async Task<Result<ResponseType<UserResponseDto>>> Handle(GetUserById request, CancellationToken cancellationToken)
+    public async Task<Result<ResponseType<UserResponseDto>>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
         var user = userRepository.GetOne(request.UserId);
 
@@ -31,7 +31,7 @@ public sealed class GetOnePostQueryHandler(IUserRepository userRepository, IMapp
         {
             IsSuccess = true,
             Message = user.Message,
-            Object = mapper.Map<UserResponseDto>(user)
+            Object = mapper.Map<UserResponseDto>(user.Object)
         });
     }
 }

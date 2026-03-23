@@ -17,12 +17,12 @@ public class UserController(ISender sender) : BaseAPIController
         return await sender.Send(new GetAllUsersQuery());
     }
 
-    [HttpGet("/{userId:guid}")]
+    [HttpGet("{userId:guid}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
     public async Task<ResponseType<UserResponseDto>> GetOneUser(Guid userId)
     {
-        return await sender.Send(new GetUserById { UserId = userId });
+        return await sender.Send(new GetUserByIdQuery { UserId = userId });
     }
 
     [HttpPut]
@@ -33,7 +33,7 @@ public class UserController(ISender sender) : BaseAPIController
         return await sender.Send(new UpdateUserCommand { User = user });
     }
 
-    [HttpDelete("/{userId:guid}")]
+    [HttpDelete("{userId:guid}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
     public async Task<ResponseType<bool>> DeletePost(Guid userId)
