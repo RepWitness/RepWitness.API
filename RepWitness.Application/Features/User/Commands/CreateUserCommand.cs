@@ -15,7 +15,7 @@ public class CreateUserCommand : IRequest<Result<ResponseType<bool>>>
     public required CreateUserRequestDto User { get; set; }
 }
 
-public sealed class CreateUserCommandHandler(IUserRepository userRepository, IMapper mapper, IEmailService emailService)
+public sealed class CreateUserCommandHandler(IUserRepository userRepository, IRoleRepository roleRepository, IMapper mapper, IEmailService emailService)
     : IRequestHandler<CreateUserCommand, Result<ResponseType<bool>>>
 {
     public async Task<Result<ResponseType<bool>>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
@@ -56,6 +56,17 @@ public sealed class CreateUserCommandHandler(IUserRepository userRepository, IMa
             {
                 IsSuccess = false,
                 Message = passwordValidation.Value
+            });
+        }
+
+        var role = roleRepository.GetOne(request.User.RoleId);
+
+        if (role is { Object: null, IsSuccess: false })
+        {
+            return Result<ResponseType<bool>>.Success(new ResponseType<bool>
+            {
+                IsSuccess = false,
+                Message = role.Message
             });
         }
 

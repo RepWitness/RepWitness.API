@@ -17,8 +17,4 @@
     <ProjectReference Include="..\RepWitness.Infrastructure\RepWitness.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Role\Commands\" />
-  </ItemGroup>
-
 </Project>
