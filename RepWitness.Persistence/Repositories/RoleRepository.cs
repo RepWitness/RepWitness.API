@@ -165,6 +165,5 @@ public class RoleRepository(RepWitnessContext context) : IRoleRepository
                 IsSuccess = false
             };
         }
-        ;
     }
 }
