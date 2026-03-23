@@ -1,0 +1,7 @@
+﻿namespace RepWitness.Application.Features.Role.Dtos;
+
+public class CreateRoleRequestDto
+{
+    public string Name { get; set; } = null!;
+    public string Description { get; set; } = null!;
+}

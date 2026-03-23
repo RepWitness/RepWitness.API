@@ -10,6 +10,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();
+        services.AddScoped<IRoleRepository, RoleRepository>();
         return services;
     }
 }
